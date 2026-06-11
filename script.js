@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Slideshow de la section Hero
     const images = [
         'img/1000_F_581814339_dcBh4rdrMuvJF6dV0P3eOpkelaqUxueh.jpg',
         'img/1558136011231.jfif',
@@ -30,11 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setInterval(showNextSlide, 5000);
 
+    // Menu hamburger
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('nav-links');
-    const contactForm = document.getElementById('contact-form');
-    const formMessage = document.getElementById('form-message');
-    const learnMoreBtn = document.querySelector('.btn');
 
     hamburger.addEventListener('click', function() {
         hamburger.classList.toggle('active');
@@ -49,9 +48,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Bouton En Savoir Plus
+    const learnMoreBtn = document.querySelector('.btn');
     learnMoreBtn.addEventListener('click', function() {
         document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
     });
+
+    // Formulaire de contact
+    const contactForm = document.getElementById('contact-form');
+    const formMessage = document.getElementById('form-message');
 
     contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -92,6 +97,74 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Galerie circulaire 3D
+    const carouselItems = document.querySelectorAll('.carousel-item');
+    let currentCarouselIndex = 0;
+    const totalCarouselItems = carouselItems.length;
+    const radius = 500; // Rayon du cercle
+
+    function updateCarousel() {
+        carouselItems.forEach((item, index) => {
+            const angle = ((index - currentCarouselIndex) * 360) / totalCarouselItems;
+            const radians = (angle * Math.PI) / 180;
+            
+            const x = Math.sin(radians) * radius;
+            const z = Math.cos(radians) * radius - radius;
+            
+            let scale = 1;
+            let opacity = 0.3;
+            let zIndex = 1;
+            
+            // La photo centrale est plus grande et plus opaque
+            if (index === currentCarouselIndex) {
+                scale = 1.2;
+                opacity = 1;
+                zIndex = 10;
+            } else {
+                // Calculer la distance par rapport à la position centrale
+                const distance = Math.abs((index - currentCarouselIndex + totalCarouselItems) % totalCarouselItems);
+                const normalizedDistance = Math.min(distance, totalCarouselItems - distance);
+                scale = 1 - (normalizedDistance * 0.2);
+                opacity = 1 - (normalizedDistance * 0.35);
+                zIndex = totalCarouselItems - normalizedDistance;
+            }
+            
+            item.style.transform = `translate3d(${x}px, 0, ${z}px) scale(${scale})`;
+            item.style.opacity = opacity;
+            item.style.zIndex = zIndex;
+        });
+    }
+
+    // Initialiser la galerie
+    updateCarousel();
+
+    // Défilement automatique
+    function nextCarousel() {
+        currentCarouselIndex = (currentCarouselIndex + 1) % totalCarouselItems;
+        updateCarousel();
+    }
+
+    let autoplayInterval = setInterval(nextCarousel, 3000);
+
+    // Pause au survol
+    const galleryContainer = document.querySelector('.gallery-container');
+    galleryContainer.addEventListener('mouseenter', () => {
+        clearInterval(autoplayInterval);
+    });
+
+    galleryContainer.addEventListener('mouseleave', () => {
+        autoplayInterval = setInterval(nextCarousel, 3000);
+    });
+
+    // Clic sur les items pour naviguer
+    carouselItems.forEach((item, index) => {
+        item.addEventListener('click', () => {
+            currentCarouselIndex = index;
+            updateCarousel();
+        });
+    });
+
+    // Animations de scroll pour les autres sections
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
