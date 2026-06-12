@@ -408,13 +408,12 @@ body {
 }
 
 .gallery2-container {
-    /* position: relative; */
+    position: relative;
     width: 100%;
     max-width: 1200px;
-    /* margin: 0 auto; */
-    /* overflow: hidden; */
-    /* perspective: 1200px; */
-    /* border: solid red;   */
+    margin: 0 auto;
+    overflow: hidden;
+     perspective: 1200px;
 }
 
 .gallery2-track {
