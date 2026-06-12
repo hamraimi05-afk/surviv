@@ -391,6 +391,98 @@ body {
     display: block;
 }
 
+.gallery2 {
+    padding: 200px 0;
+    background: linear-gradient(180deg, #ffffff 0%, #1a1a1a 100%);
+}
+
+.gallery2 .section-title {
+    color: #ffffff;
+    
+}
+
+.gallery2 .section-subtitle {
+    color: #cccccc;
+
+    
+}
+
+.gallery2-container {
+    /* position: relative; */
+    width: 100%;
+    max-width: 1200px;
+    /* margin: 0 auto; */
+    /* overflow: hidden; */
+    /* perspective: 1200px; */
+    /* border: solid red;   */
+}
+
+.gallery2-track {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+    
+}
+
+.gallery2-item {
+    position: relative;
+    width:800px;
+    height: 500px;
+    margin: 0 -200px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center center;
+    cursor: pointer;
+
+    
+
+}
+
+.gallery2-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    
+}
+
+.gallery2-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 40px 20px 20px;
+    color: white;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    
+}
+
+.gallery2-item:hover .gallery2-caption,
+.gallery2-item.gallery2-active .gallery2-caption {
+    transform: translateY(0);
+}
+
+.gallery2-caption h4 {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.gallery2-caption p {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+
+
 .footer {
     background: #2c3e50;
     color: white;
@@ -500,6 +592,20 @@ body {
         height: 300px;
         margin-left: -110px;
         margin-top: -150px;
+    }
+
+    .gallery2-item {
+        width: 300px;
+        height: 400px;
+        margin: 0 -150px;
+    }
+
+    .gallery2-caption h4 {
+        font-size: 1.1rem;
+    }
+
+    .gallery2-caption p {
+        font-size: 0.9rem;
     }
 }
 

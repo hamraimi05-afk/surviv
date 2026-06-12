@@ -202,4 +202,143 @@ document.addEventListener('DOMContentLoaded', function() {
         contactFormEl.style.transition = 'all 0.8s ease';
         observer.observe(contactFormEl);
     }
+
+    // Nouvelle galerie 3D avec défilement automatique INFINI
+    const gallery2Items = Array.from(document.querySelectorAll('.gallery2-item'));
+    let gallery2Index = 0;
+    let gallery2Autoplay;
+    let isTransitioning = false;
+
+    // Dupliquer les items pour le scroll infini
+    const gallery2Track = document.querySelector('.gallery2-track');
+    if (gallery2Track && gallery2Items.length > 0) {
+        // Dupliquer deux fois pour l'effet infini
+        gallery2Items.forEach(item => {
+            const clone1 = item.cloneNode(true);
+            const clone2 = item.cloneNode(true);
+            gallery2Track.appendChild(clone1);
+            gallery2Track.appendChild(clone2);
+        });
+    }
+
+    // Obtenir la nouvelle liste complète des items
+    const allGallery2Items = document.querySelectorAll('.gallery2-item');
+    const totalItems = allGallery2Items.length;
+    const originalCount = gallery2Items.length;
+
+    function updateGallery2() {
+        allGallery2Items.forEach((item, index) => {
+            let displayIndex = index;
+            // Calculer l'offset en utilisant l'index du milieu pour l'effet infini
+            const offset = index - (gallery2Index + originalCount);
+            
+            let z = Math.abs(offset) * -100;
+            let x = offset * 250; // Augmenter l'espacement pour les plus grandes images
+            let scale = 1 - (Math.abs(offset) * 0.18); // Réduire l'effet d'échelle
+            let opacity = 1 - (Math.abs(offset) * 0.25);
+            let rotateY = offset * -12; // Réduire la rotation
+
+            if (scale < 0.5) scale = 0.5;
+            if (opacity < 0.2) opacity = 0.2;
+
+            item.style.transform = `translate3d(${x}px, 0, ${z}px) rotateY(${rotateY}deg) scale(${scale})`;
+            item.style.opacity = opacity;
+            item.style.zIndex = 50 - Math.abs(offset);
+            
+            // Déterminer l'item actif (celui avec offset 0 dans la partie visible)
+            const isActive = index === gallery2Index + originalCount;
+            item.classList.toggle('gallery2-active', isActive);
+        });
+    }
+
+    // Initialiser la galerie avec l'index au milieu pour l'effet infini
+    gallery2Index = 0;
+    updateGallery2();
+
+    // Défilement automatique
+    function startGallery2Autoplay() {
+        gallery2Autoplay = setInterval(() => {
+            if (!isTransitioning) {
+                moveGallery2(1);
+            }
+        }, 3500);
+    }
+    startGallery2Autoplay();
+
+    // Fonction pour déplacer la galerie
+    function moveGallery2(direction) {
+        isTransitioning = true;
+        
+        gallery2Index += direction;
+        
+        // Réinitialiser l'index pour l'effet infini sans transition visuelle
+        if (gallery2Index >= originalCount) {
+            // Attendre que la transition termine, puis réinitialiser
+            setTimeout(() => {
+                gallery2Index -= originalCount;
+                allGallery2Items.forEach(item => {
+                    item.style.transition = 'none';
+                });
+                updateGallery2();
+                // Réactiver les transitions après un petit délai
+                setTimeout(() => {
+                    allGallery2Items.forEach(item => {
+                        item.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    });
+                    isTransitioning = false;
+                }, 50);
+            }, 600);
+        } else if (gallery2Index < 0) {
+            setTimeout(() => {
+                gallery2Index += originalCount;
+                allGallery2Items.forEach(item => {
+                    item.style.transition = 'none';
+                });
+                updateGallery2();
+                setTimeout(() => {
+                    allGallery2Items.forEach(item => {
+                        item.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                    });
+                    isTransitioning = false;
+                }, 50);
+            }, 600);
+        } else {
+            updateGallery2();
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 600);
+        }
+    }
+
+    // Clic sur les items de la galerie - seulement les items adjacents ou actif
+    allGallery2Items.forEach((item, index) => {
+        item.addEventListener('click', () => {
+            if (isTransitioning) return;
+            
+            const visibleIndex = index - originalCount;
+            const offset = visibleIndex - gallery2Index;
+            
+            if (Math.abs(offset) === 1) { // Clic sur un item adjacent
+                moveGallery2(offset);
+                clearInterval(gallery2Autoplay);
+                startGallery2Autoplay();
+            } else if (offset !== 0) { // Clic sur un item plus loin, aller vers lui progressivement
+                moveGallery2(offset > 0 ? 1 : -1);
+                clearInterval(gallery2Autoplay);
+                startGallery2Autoplay();
+            }
+        });
+    });
+
+    // Pause au survol de la galerie
+    const gallery2Container = document.querySelector('.gallery2-container');
+    if (gallery2Container) {
+        gallery2Container.addEventListener('mouseenter', () => {
+            clearInterval(gallery2Autoplay);
+        });
+
+        gallery2Container.addEventListener('mouseleave', () => {
+            startGallery2Autoplay();
+        });
+    }
 });
