@@ -66,7 +66,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const email = formData.get('email');
         const message = formData.get('message');
 
+        // Validation email simple
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
         if (name && email && message) {
+            if (!emailRegex.test(email)) {
+                formMessage.textContent = 'Veuillez saisir une adresse email valide.';
+                formMessage.className = 'form-message error';
+                setTimeout(() => {
+                    formMessage.style.display = 'none';
+                }, 5000);
+                return;
+            }
+
             try {
                 const response = await fetch(contactForm.action, {
                     method: 'POST',
@@ -97,72 +109,150 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Galerie circulaire 3D
-    const carouselItems = document.querySelectorAll('.carousel-item');
-    let currentCarouselIndex = 0;
-    const totalCarouselItems = carouselItems.length;
-    const radius = 500; // Rayon du cercle
+    // Fonction réutilisable pour initialiser un carrousel 3D circulaire
+    function initCarousel(carouselSelector, enableScrollControls = false) {
+        const carousel = document.querySelector(carouselSelector);
+        if (!carousel) return;
 
-    function updateCarousel() {
-        carouselItems.forEach((item, index) => {
-            const angle = ((index - currentCarouselIndex) * 360) / totalCarouselItems;
-            const radians = (angle * Math.PI) / 180;
-            
-            const x = Math.sin(radians) * radius;
-            const z = Math.cos(radians) * radius - radius;
-            
-            let scale = 1;
-            let opacity = 0.3;
-            let zIndex = 1;
-            
-            // La photo centrale est plus grande et plus opaque
-            if (index === currentCarouselIndex) {
-                scale = 1.2;
-                opacity = 1;
-                zIndex = 10;
-            } else {
-                // Calculer la distance par rapport à la position centrale
-                const distance = Math.abs((index - currentCarouselIndex + totalCarouselItems) % totalCarouselItems);
-                const normalizedDistance = Math.min(distance, totalCarouselItems - distance);
-                scale = 1 - (normalizedDistance * 0.2);
-                opacity = 1 - (normalizedDistance * 0.35);
-                zIndex = totalCarouselItems - normalizedDistance;
-            }
-            
-            item.style.transform = `translate3d(${x}px, 0, ${z}px) scale(${scale})`;
-            item.style.opacity = opacity;
-            item.style.zIndex = zIndex;
-        });
-    }
+        const items = carousel.querySelectorAll('.carousel-item');
+        if (items.length === 0) return;
 
-    // Initialiser la galerie
-    updateCarousel();
+        let currentIndex = 0;
+        const totalItems = items.length;
+        const radius = 500; // Rayon du cercle
+        let autoplayInterval;
+        let isScrolling = false; // Pour éviter les défilements multiples avec la molette
+        let touchStartX = 0; // Pour les gestes tactiles
 
-    // Défilement automatique
-    function nextCarousel() {
-        currentCarouselIndex = (currentCarouselIndex + 1) % totalCarouselItems;
-        updateCarousel();
-    }
+        // Mettre à jour le carrousel
+        function updateCarousel() {
+            items.forEach((item, index) => {
+                const angle = ((index - currentIndex) * 360) / totalItems;
+                const radians = (angle * Math.PI) / 180;
 
-    let autoplayInterval = setInterval(nextCarousel, 3000);
+                const x = Math.sin(radians) * radius;
+                const z = Math.cos(radians) * radius - radius;
 
-    // Pause au survol
-    const galleryContainer = document.querySelector('.gallery-container');
-    galleryContainer.addEventListener('mouseenter', () => {
-        clearInterval(autoplayInterval);
-    });
+                let scale = 1;
+                let opacity = 0.3;
+                let zIndex = 1;
 
-    galleryContainer.addEventListener('mouseleave', () => {
-        autoplayInterval = setInterval(nextCarousel, 3000);
-    });
+                // La photo centrale est plus grande et plus opaque
+                if (index === currentIndex) {
+                    scale = 1.2;
+                    opacity = 1;
+                    zIndex = 10;
+                } else {
+                    // Calculer la distance par rapport à la position centrale
+                    const distance = Math.abs((index - currentIndex + totalItems) % totalItems);
+                    const normalizedDistance = Math.min(distance, totalItems - distance);
+                    scale = 1 - (normalizedDistance * 0.2);
+                    opacity = 1 - (normalizedDistance * 0.35);
+                    zIndex = totalItems - normalizedDistance;
+                }
 
-    // Clic sur les items pour naviguer
-    carouselItems.forEach((item, index) => {
-        item.addEventListener('click', () => {
-            currentCarouselIndex = index;
+                item.style.transform = `translate3d(${x}px, 0, ${z}px) scale(${scale})`;
+                item.style.opacity = opacity;
+                item.style.zIndex = zIndex;
+            });
+        }
+
+        // Passer à l'image suivante
+        function nextCarousel() {
+            currentIndex = (currentIndex + 1) % totalItems;
             updateCarousel();
+        }
+
+        // Passer à l'image précédente
+        function prevCarousel() {
+            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+            updateCarousel();
+        }
+
+        // Démarrer le défilement automatique
+        function startAutoplay() {
+            stopAutoplay(); // S'assurer qu'il n'y a pas d'intervalle existant
+            autoplayInterval = setInterval(nextCarousel, 3000);
+        }
+
+        // Arrêter le défilement automatique
+        function stopAutoplay() {
+            clearInterval(autoplayInterval);
+        }
+
+        // Initialiser
+        updateCarousel();
+        startAutoplay();
+
+        // Pause au survol
+        const container = carousel.closest('.gallery-container');
+        if (container) {
+            container.addEventListener('mouseenter', stopAutoplay);
+            container.addEventListener('mouseleave', startAutoplay);
+        }
+
+        // Clic sur les items pour naviguer
+        items.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+            });
         });
-    });
+
+        // Contrôles par scroll/gestes (uniquement si activé)
+        if (enableScrollControls && container) {
+            // Gestion de la molette de souris
+            container.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (isScrolling) return;
+                
+                isScrolling = true;
+                stopAutoplay();
+
+                if (e.deltaY > 0) {
+                    nextCarousel();
+                } else {
+                    prevCarousel();
+                }
+
+                setTimeout(() => {
+                    isScrolling = false;
+                    startAutoplay();
+                }, 600); // Attendre la fin de l'animation avant de réactiver
+            }, { passive: false });
+
+            // Gestion des gestes tactiles (mobile)
+            container.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+                stopAutoplay();
+            }, { passive: true });
+
+            container.addEventListener('touchend', (e) => {
+                if (!touchStartX) return;
+
+                const touchEndX = e.changedTouches[0].clientX;
+                const diff = touchStartX - touchEndX;
+
+                // Seulement si le geste est suffisamment long (50px minimum)
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        // Glissé vers la gauche → image suivante
+                        nextCarousel();
+                    } else {
+                        // Glissé vers la droite → image précédente
+                        prevCarousel();
+                    }
+                }
+
+                touchStartX = 0;
+                startAutoplay(); // Reprendre le défilement automatique
+            }, { passive: true });
+        }
+    }
+
+    // Initialiser les deux galeries
+    initCarousel('#gallery .gallery-carousel'); // Sans contrôles scroll/gestes
+    initCarousel('#gallery2 .gallery-carousel', true); // Avec contrôles scroll/gestes
 
     // Animations de scroll pour les autres sections
     const observerOptions = {

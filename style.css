@@ -269,6 +269,18 @@ body {
 .service-icon {
     font-size: 60px;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff5733;
+}
+
+.service-icon svg {
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover .service-icon svg {
+    transform: scale(1.1);
 }
 
 .service-card h3 {
@@ -391,94 +403,7 @@ body {
     display: block;
 }
 
-.gallery2 {
-    padding: 200px 0;
-    background: linear-gradient(180deg, #ffffff 0%, #1a1a1a 100%);
-}
 
-.gallery2 .section-title {
-    color: #ffffff;
-    
-}
-
-.gallery2 .section-subtitle {
-    color: #cccccc;
-
-    
-}
-
-.gallery2-container {
-    position: relative;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    overflow: hidden;
-     perspective: 1200px;
-}
-
-.gallery2-track {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-    transform-style: preserve-3d;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-
-    
-}
-
-.gallery2-item {
-    position: relative;
-    width:800px;
-    height: 500px;
-    margin: 0 -200px;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: center center;
-    cursor: pointer;
-
-    
-
-}
-
-.gallery2-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    
-}
-
-.gallery2-caption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-    padding: 40px 20px 20px;
-    color: white;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-    
-}
-
-.gallery2-item:hover .gallery2-caption,
-.gallery2-item.gallery2-active .gallery2-caption {
-    transform: translateY(0);
-}
-
-.gallery2-caption h4 {
-    font-size: 1.4rem;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.gallery2-caption p {
-    font-size: 1rem;
-    opacity: 0.9;
-}
 
 
 
@@ -492,6 +417,32 @@ body {
 .footer p {
     font-size: 15px;
     opacity: 0.9;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.social-link {
+    color: white;
+    text-decoration: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: #ff5733;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 87, 51, 0.4);
 }
 
 @media (max-width: 768px) {
