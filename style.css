@@ -445,6 +445,123 @@ body {
     box-shadow: 0 5px 15px rgba(255, 87, 51, 0.4);
 }
 
+.team-body {
+    min-height: 100vh;
+    background:
+        linear-gradient(135deg, rgba(0, 0, 0, 0.65) 0%, rgba(236, 233, 232, 0.35) 100%),
+        url('imgeq/photoequipe.jpg') center/cover no-repeat fixed;
+    color: #333;
+}
+
+.team-body .navbar {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.team-body .logo h1 {
+    color: #ffffff;
+}
+
+.team-body .nav-links li {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.team-body .nav-links a {
+    color: #ffffff;
+}
+
+.team-header {
+    color: #ffffff;
+    padding: 140px 0 70px;
+    text-align: center;
+    background: transparent;
+}
+
+.team-header-content h1 {
+    font-size: 48px;
+    margin-bottom: 12px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.team-header-content p {
+    font-size: 18px;
+    opacity: 0.95;
+    color: #ffffff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.team-main {
+    padding: 50px 0 100px;
+}
+
+.team-pdg {
+    max-width: 700px;
+    margin: 0 auto 50px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.team-pdg img {
+    display: block;
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+}
+
+.team-pdg-content {
+    padding: 20px 24px 26px;
+    text-align: center;
+}
+
+.team-pdg h2 {
+    color: #2c3e50;
+    margin-bottom: 6px;
+}
+
+.team-pdg p {
+    color: #666;
+}
+
+.team-collaborators {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 30px;
+}
+
+.team-card {
+    flex: 1;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 25px;
+}
+
+.team-card img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+}
+
+.team-card h2 {
+    margin: 20px 0 10px;
+    color: #2c3e50;
+    font-size: 26px;
+}
+
+.team-card p {
+    padding: 0 20px;
+    color: #666;
+    line-height: 1.7;
+}
+
 @media (max-width: 768px) {
     .navbar {
         flex-direction: row;
@@ -516,6 +633,22 @@ body {
 
     .section-title {
         font-size: 28px;
+    }
+
+    .team-header-content h1 {
+        font-size: 36px;
+    }
+
+    .team-collaborators {
+        flex-direction: column;
+    }
+
+    .team-pdg img {
+        height: 280px;
+    }
+
+    .team-card img {
+        height: 260px;
     }
 
     .section-subtitle {

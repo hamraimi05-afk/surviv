@@ -35,30 +35,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('nav-links');
 
-    hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
-        navLinks.classList.toggle('active');
-    });
-
-    const navItems = navLinks.querySelectorAll('li a');
-    navItems.forEach(item => {
-        item.addEventListener('click', function() {
-            hamburger.classList.remove('active');
-            navLinks.classList.remove('active');
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
         });
-    });
+
+        const navItems = navLinks.querySelectorAll('li a');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+    }
 
     // Bouton En Savoir Plus
     const learnMoreBtn = document.querySelector('.btn');
-    learnMoreBtn.addEventListener('click', function() {
-        document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
-    });
+    if (learnMoreBtn) {
+        learnMoreBtn.addEventListener('click', function() {
+            document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+        });
+    }
 
     // Formulaire de contact
     const contactForm = document.getElementById('contact-form');
     const formMessage = document.getElementById('form-message');
 
-    contactForm.addEventListener('submit', async function(e) {
+    if (contactForm && formMessage) {
+        contactForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const formData = new FormData(contactForm);
@@ -108,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formMessage.className = 'form-message error';
         }
     });
+    }
 
     // Fonction réutilisable pour initialiser un carrousel 3D circulaire
     function initCarousel(carouselSelector, enableScrollControls = false) {
